@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package io.github.ShabdanBatyrkulov.lms.repository;
 
-import com.example.demo.model.User;
+import io.github.ShabdanBatyrkulov.lms.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 

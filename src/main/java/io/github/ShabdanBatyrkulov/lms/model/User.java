@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package io.github.ShabdanBatyrkulov.lms.model;
 
 import jakarta.persistence.*;
 import java.util.UUID;
