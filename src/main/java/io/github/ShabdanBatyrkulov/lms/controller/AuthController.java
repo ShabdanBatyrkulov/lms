@@ -37,7 +37,7 @@ public class AuthController {
     // -------------------------
     // Login endpoint
     // -------------------------
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDto loginDto) {
         User user = userService.findByUsername(loginDto.getUsername());
         if (user == null) {
