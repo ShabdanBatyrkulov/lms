@@ -17,7 +17,7 @@ public class User {
     @Column(nullable = false, length = 255)
     private String passwordHash;
 
-    protected User() {
+    public User() {
     }
 
     public User(String username, String passwordHash) {
