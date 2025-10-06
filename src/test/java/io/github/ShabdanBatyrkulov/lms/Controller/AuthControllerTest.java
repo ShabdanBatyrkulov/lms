@@ -85,7 +85,7 @@ class AuthControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(dto)))
                     .andExpect(status().isOk())
-                    .andExpect(content().string("ogin successful"));
+                    .andExpect(content().string("Login successful"));
         }
     @Test
     void login_IncorrectPassword() throws Exception {
