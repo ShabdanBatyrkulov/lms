@@ -86,6 +86,7 @@ class AuthControllerTest {
                     .content(objectMapper.writeValueAsString(dto)))
                     .andExpect(status().isOk())
                     .andExpect(content().string("Login successful"));
+            
         }
     @Test
     void login_IncorrectPassword() throws Exception {
