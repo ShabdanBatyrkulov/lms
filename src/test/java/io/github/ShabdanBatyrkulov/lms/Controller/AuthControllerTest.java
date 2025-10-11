@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.containsString;
 
 @ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
@@ -71,22 +72,24 @@ class AuthControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Username already exists"));
     }
-        //Login tests
-        @Test
-        void login_Successful() throws Exception{
-            UserRegistrationDto dto = new UserRegistrationDto("testUser", "password123");
-            User user = new User();
-            user.setUsername("testUser");
-            user.setPasswordHash("encodedPassword");
 
-            when(userService.findByUsername("testUser")).thenReturn(user);
-            when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
-            mockMvc.perform(get("/api/auth/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(dto)))
-                    .andExpect(status().isOk())
-                    .andExpect(content().string("Login successful"));
-        }
+    //Login tests
+    @Test
+    void login_Successful() throws Exception{
+        UserRegistrationDto dto = new UserRegistrationDto("testUser", "password123");
+        User user = new User();
+        user.setUsername("testUser");
+        user.setPasswordHash("encodedPassword");
+
+        when(userService.findByUsername("testUser")).thenReturn(user);
+        when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Login successful"));
+    }
+
     @Test
     void login_IncorrectPassword() throws Exception {
         UserRegistrationDto dto = new UserRegistrationDto("testUser", "wrongPass");
@@ -97,7 +100,7 @@ class AuthControllerTest {
         when(userService.findByUsername("testUser")).thenReturn(user);
         when(passwordEncoder.matches("wrongPass", "encodedPassword")).thenReturn(false);
 
-        mockMvc.perform(get("/api/auth/login")
+        mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isUnauthorized())
@@ -110,11 +113,54 @@ class AuthControllerTest {
 
         when(userService.findByUsername("unknownUser")).thenReturn(null);
 
-        mockMvc.perform(get("/api/auth/login")
+        mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("Invalid username or password"));
     }
 
+    @Test
+    void register_EmptyUsername() throws Exception {
+        UserRegistrationDto dto = new UserRegistrationDto("", "password123");
+        
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("username: Username is required")));
+    }
+
+    @Test
+    void register_EmptyPassword() throws Exception {
+        UserRegistrationDto dto = new UserRegistrationDto("testuser", "");
+        
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("password: Password is required")));
+    }
+
+    @Test
+    void register_ShortUsername() throws Exception {
+        UserRegistrationDto dto = new UserRegistrationDto("ab", "password123");
+        
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("username: Username must be between 3 and 50 characters"));
+    }
+
+    @Test
+    void register_ShortPassword() throws Exception {
+        UserRegistrationDto dto = new UserRegistrationDto("testuser", "12345");
+        
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("password: Password must be at least 6 characters long"));
+    }
 }

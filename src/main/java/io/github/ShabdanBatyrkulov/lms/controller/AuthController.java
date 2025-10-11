@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,7 +28,14 @@ public class AuthController {
     // Registration endpoint
     // -------------------------
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserRegistrationDto registrationDto) {
+    public ResponseEntity<String> register(@Valid @RequestBody UserRegistrationDto registrationDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
+        
         try {
             userService.registerUser(registrationDto);
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
@@ -37,8 +47,8 @@ public class AuthController {
     // -------------------------
     // Login endpoint
     // -------------------------
-    @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDto loginDto) {
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto loginDto) {
         User user = userService.findByUsername(loginDto.getUsername());
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");

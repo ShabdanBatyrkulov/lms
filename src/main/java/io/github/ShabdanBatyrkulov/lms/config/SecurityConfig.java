@@ -23,7 +23,7 @@ public class SecurityConfig {
             .headers().frameOptions().disable() // allow H2 console to display in iframe
             .and()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/hello", "/h2-console/**").permitAll()
+                .requestMatchers("/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin().disable()
