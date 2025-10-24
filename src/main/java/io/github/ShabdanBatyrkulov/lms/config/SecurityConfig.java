@@ -19,8 +19,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // disable CSRF for H2 console + testing
-            .headers().frameOptions().disable() // allow H2 console to display in iframe
+            .cors()  // ✅ enable CORS using your CorsConfig bean
+            .and()
+            .csrf().disable()
+            .headers().frameOptions().disable()
             .and()
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/**").permitAll()
