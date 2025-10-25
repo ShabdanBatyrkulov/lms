@@ -19,6 +19,9 @@ api:
   gemini:
     api-key: ${GEMINI_API_KEY:dummy-gemini-key}
 
+jwt:
+  secret: ${JWT_SECRET}
+
 # CORS Configuration
 app:
   cors:
