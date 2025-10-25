@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 interface LocationState {
   message?: string;
@@ -15,6 +16,14 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState;
+  const { isAuthenticated, setMessage, login } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setMessage('You are already logged in');
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate, setMessage]);
 
   const [formData, setFormData] = useState<LoginFormData>({
     username: '',
@@ -35,8 +44,12 @@ const LoginPage: React.FC = () => {
     setError('');
 
     try {
-      await axios.post('/api/auth/login', formData);
-      navigate('/');
+      const response = await axios.post('/api/auth/login', formData);
+      const token = response.data.token;
+      if (token) {
+        login(token);
+        navigate('/chat');
+      }
     } catch (error: any) {
       setError(error.response?.data || 'An error occurred during login');
     }

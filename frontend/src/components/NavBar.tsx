@@ -1,8 +1,16 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const NavBar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar">
@@ -11,11 +19,16 @@ const NavBar: React.FC = () => {
           Learning Management System
         </Link>
         <div className="nav-links">
-          {location.pathname !== '/register' && (
-            <Link to="/register" className="nav-link">Register</Link>
-          )}
-          {location.pathname !== '/login' && (
-            <Link to="/login" className="nav-link">Login</Link>
+          {!isAuthenticated ? (
+            <>
+              <Link to="/register" className="nav-link">Register</Link>
+              <Link to="/login" className="nav-link">Login</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/chat" className="nav-link">Chat</Link>
+              <span onClick={handleLogout} className="nav-link" style={{ cursor: 'pointer' }}>Logout</span>
+            </>
           )}
         </div>
       </div>
