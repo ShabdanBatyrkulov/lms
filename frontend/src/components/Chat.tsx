@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import styles from './Chat.module.css';
 import api from '../utils/api';
 
@@ -73,7 +74,11 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
                         }`}
                     >
                         <div className={styles.messageContent}>
-                            {message.content}
+                            {message.isUser ? (
+                                message.content
+                            ) : (
+                                <ReactMarkdown>{message.content}</ReactMarkdown>
+                            )}
                         </div>
                         <div className={styles.timestamp}>
                             {new Date(message.timestamp).toLocaleTimeString()}
