@@ -64,6 +64,13 @@
 			<version>3.0.0</version>
 		</dependency>
 
+		<!-- Google GenAI Dependency -->
+		<dependency>
+			<groupId>com.google.genai</groupId>
+			<artifactId>google-genai</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 		<!-- JWT Dependencies -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

@@ -45,13 +45,14 @@ const LoginPage: React.FC = () => {
 
     try {
       const response = await axios.post('/api/auth/login', formData);
+      console.log(response)
       const token = response.data.token;
       if (token) {
         login(token);
         navigate('/chat');
       }
     } catch (error: any) {
-      setError(error.response?.data || 'An error occurred during login');
+      setError(error.response?.data?.error || error.response?.data || 'An error occurred during login');
     }
   };
 
