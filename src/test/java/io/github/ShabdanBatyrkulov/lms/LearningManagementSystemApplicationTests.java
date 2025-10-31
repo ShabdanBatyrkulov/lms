@@ -9,13 +9,8 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 class LearningManagementSystemApplicationTests {
-
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Test
     void contextLoads() {
         // This test verifies that the Spring application context loads successfully
     }
-
 }
