@@ -1,11 +1,13 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: dummy-user
-    password: dummy-password
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 
 jwt:
   secret: dummy-jwt-secret
