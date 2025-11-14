@@ -45,7 +45,6 @@ const LoginPage: React.FC = () => {
 
     try {
       const response = await axios.post('/api/auth/login', formData);
-      console.log(response)
       const token = response.data.token;
       if (token) {
         login(token);

@@ -1,18 +1,16 @@
 # Development environment configuration
 spring:
   datasource:
-    url: jdbc:h2:mem:lms
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/lms_dev
     username: ${DB_USERNAME:admin}
     password: ${DB_PASSWORD:admin}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 # API Keys Configuration
 api:
