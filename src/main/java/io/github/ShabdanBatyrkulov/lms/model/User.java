@@ -25,6 +25,10 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     // Getters and setters
     public UUID getId() {
         return id;
